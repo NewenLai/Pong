@@ -1,4 +1,5 @@
 import pygame as pg
+from random import randrange
 
 tamanno = (800, 600)
 
@@ -55,9 +56,21 @@ class Game():
     def __init__(self, tamanno):
         self.pantalla = pg.display.set_mode(tamanno)
         self.reloj = pg.time.Clock() #limitar a x fps
+        
+        #self.bola = Bola(tamanno[0]//2-10, tamanno[1]//2-10, 20, 20)
+        #self.bola2 = Bola(tamanno[0]//2-10, tamanno[1]//2-10,15,15, ( 255,0,0))
+        self.bolas = []
+        for i in range(10):
+            tamanyo = randrange(10, 41)
+            bola = Bola(randrange(0, tamanno[0]), randrange(0, tamanno[1]), tamanyo, tamanyo, (randrange(256),randrange(256), randrange(256)))
+            
+            bola.movHor = randrange(2) == 1
+            bola.movVert = randrange(2) == 1
+
+            self.bolas.append(bola)
+
 
     def bucle_ppal(self):
-        bola = Bola(tamanno[0]//2-10, tamanno[1]//2-10, 20, 20)
         game_over = False
         pg.init()
         mov = False
@@ -68,10 +81,16 @@ class Game():
                 if evento.type == pg.QUIT:
                     game_over =True
             
-            bola.actualizar()            
+            for i in range(10):
+                self.bolas[i].actualizar()
+            #self.bola.actualizar()            
+            #self.bola2.actualizar()
 
             self.pantalla.fill((0, 0, 0))
-            pg.draw.rect(self.pantalla, bola.color, pg.Rect(bola.x, bola.y, bola.w, bola.h))
+            for bola in self.bolas:
+                pg.draw.rect(self.pantalla, bola.color, pg.Rect(bola.x, bola.y, bola.w, bola.h))
+            #pg.draw.rect(self.pantalla, self.bola.color, pg.Rect(self.bola.x, self.bola.y, self.bola.w, self.bola.h))
+            #pg.draw.rect(self.pantalla, self.bola2.color, pg.Rect(self.bola2.x, self.bola2.y, self.bola2.w, self.bola2.h))
 
             pg.display.flip()
             
